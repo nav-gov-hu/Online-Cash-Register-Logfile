@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# Projekt: Magyar Online Pénztárgép Rendszer queryCashRegister WSDL
+# Author: NAV Informatikai Intézet
+
+# Version: v1.0 2019/11/10
+-->
+<wsdl:definitions xmlns:wssutil="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" targetNamespace="http://schemas.nav.gov.hu/OPF/1.0/api" xmlns:tns="http://schemas.nav.gov.hu/OPF/1.0/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsp:UsingPolicy wssutil:Required="true"/>
+	<ns0:Policy wssutil:Id="Mtom.xml" xmlns:ns0="http://schemas.xmlsoap.org/ws/2004/09/policy">
+		<ns1:OptimizedMimeSerialization xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"/>
+	</ns0:Policy>
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import schemaLocation="./cashRegisterApi.xsd" namespace="http://schemas.nav.gov.hu/OPF/1.0/api"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="QueryCashRegisterStatusRequest">
+		<wsdl:part name="QueryCashRegisterStatusRequest" element="tns:QueryCashRegisterStatusRequest"/>
+	</wsdl:message>
+	<wsdl:message name="QueryCashRegisterStatusResponse">
+		<wsdl:part name="QueryCashRegisterStatusResponse" element="tns:QueryCashRegisterStatusResponse"/>
+	</wsdl:message>
+	<wsdl:message name="QueryCashRegisterFileDataRequest">
+		<wsdl:part name="QueryCashRegisterFileDataRequest" element="tns:QueryCashRegisterFileDataRequest"/>
+	</wsdl:message>
+	<wsdl:message name="QueryCashRegisterFileDataResponse">
+		<wsdl:part name="QueryCashRegisterFileDataResponse" element="tns:QueryCashRegisterFileDataResponse"/>
+	</wsdl:message>	
+	<wsdl:portType name="QueryCashRegister">
+		<wsdl:documentation>Naplóállomány lekérdezés szolgáltatás</wsdl:documentation>
+		<wsdl:operation name="queryCashRegisterStatus">
+			<wsdl:documentation>Pénztárgép státusz lekérdezés</wsdl:documentation>
+			<wsdl:input message="tns:QueryCashRegisterStatusRequest"/>
+			<wsdl:output message="tns:QueryCashRegisterStatusResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="queryCashRegisterFile">
+			<wsdl:documentation>Naplóállomány lekérdezés</wsdl:documentation>
+			<wsdl:input message="tns:QueryCashRegisterFileDataRequest"/>
+			<wsdl:output message="tns:QueryCashRegisterFileDataResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="queryCashRegisterBinding" type="tns:QueryCashRegister">
+		<wsp:PolicyReference URI="#Mtom.xml"/>
+		<soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="queryCashRegisterStatus">
+			<soap12:operation soapAction=""/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="queryCashRegisterFile">
+			<soap12:operation soapAction=""/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>		
+	</wsdl:binding>
+	<wsdl:service name="queryCashRegister">
+		<wsdl:port name="QueryCashRegister" binding="tns:queryCashRegisterBinding"/>
+	</wsdl:service>
+</wsdl:definitions>
