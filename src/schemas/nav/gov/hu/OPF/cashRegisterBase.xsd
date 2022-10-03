@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# Projekt: Magyar Online Pénztárgép Rendszer cashRegisterApi XML XSD séma
+# Author: NAV Informatikai Intézet
+
+# Version: v1.0 2019/11/10
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns="http://schemas.nav.gov.hu/OPF/1.0/base" targetNamespace="http://schemas.nav.gov.hu/OPF/1.0/base" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:simpleType name="APNumberType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">AP szám típus</xs:documentation>
+			<xs:documentation xml:lang="en">AP Number type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="9"/>
+			<xs:minLength value="9"/>
+			<xs:pattern value="[A-Z][0-9]{8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FileNumberType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Fájl sorszám típus</xs:documentation>
+			<xs:documentation xml:lang="en">File Number type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+	<xs:simpleType name="SoftwareIdType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A kliensprogram azonosítója</xs:documentation>
+			<xs:documentation xml:lang="en">Client software ID</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="18"/>
+			<xs:pattern value="[0-9A-Z\-]{18}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SoftwareOperationType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A kliensprogram működési típusa (lokális program vagy online szolgáltatás)</xs:documentation>
+			<xs:documentation xml:lang="en">Billing operation type (local program or online service)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LOCAL_SOFTWARE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Lokális program</xs:documentation>
+					<xs:documentation xml:lang="en">Local program</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ONLINE_SERVICE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Online szolgáltatás</xs:documentation>
+					<xs:documentation xml:lang="en">Online service</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FilesNotSentReasonType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Annak az oka, hogy miért nem lett az összes kért naplóállomány elküldve</xs:documentation>
+			<xs:documentation xml:lang="en">Reason of not all requested files sent</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SIZE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Méretkorlát miatt nem lett az összes állomány elküldve</xs:documentation>
+					<xs:documentation xml:lang="en">Files aggregated size exceeds the file size limit</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="NOT_AVAILABLE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A kért állományok nem állnak rendelkezésre a NAV naplóállomány lekérdező rendszerben</xs:documentation>
+					<xs:documentation xml:lang="en">Requested files not available in the system</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ValidationResultCodeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Validációs eredmény kód típus</xs:documentation>
+			<xs:documentation xml:lang="en">Validation result code type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ERROR">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Hiba</xs:documentation>
+					<xs:documentation xml:lang="en">Error</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="WARN">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Figyelmeztetés</xs:documentation>
+					<xs:documentation xml:lang="en">Warn</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OK">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">OK</xs:documentation>
+					<xs:documentation xml:lang="en">OK</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

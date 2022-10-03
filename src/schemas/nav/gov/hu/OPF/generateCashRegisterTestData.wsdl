@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# Projekt: Magyar Online Pénztárgép Rendszer belső szolgáltatások WSDL
+# Author: NAV Informatikai Intézet
+
+# Version: v1.0 2019/11/10
+-->
+<wsdl:definitions xmlns:wssutil="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" targetNamespace="http://schemas.nav.gov.hu/OPF/1.0/api" xmlns:tns="http://schemas.nav.gov.hu/OPF/1.0/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<wsp:UsingPolicy wssutil:Required="true"/>
+	<ns0:Policy wssutil:Id="Mtom.xml" xmlns:ns0="http://schemas.xmlsoap.org/ws/2004/09/policy">
+		<ns1:OptimizedMimeSerialization xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"/>
+	</ns0:Policy>
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import schemaLocation="./cashRegisterTestData.xsd" namespace="http://schemas.nav.gov.hu/OPF/1.0/api"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="GenerateCashRegisterTestDataRequest">
+		<wsdl:part name="GenerateCashRegisterTestDataRequest" element="tns:GenerateCashRegisterTestDataRequest"/>
+	</wsdl:message>
+	<wsdl:message name="GenerateCashRegisterTestDataResponse">
+		<wsdl:part name="GenerateCashRegisterTestDataResponse" element="tns:GenerateCashRegisterTestDataResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="GenerateCashRegisterTestData">
+		<wsdl:documentation>Tesztállomány generálás szolgáltatás</wsdl:documentation>
+		<wsdl:operation name="generateCashRegisterTestData">
+			<wsdl:documentation>Tesztállomány generálás</wsdl:documentation>
+			<wsdl:input message="tns:GenerateCashRegisterTestDataRequest"/>
+			<wsdl:output message="tns:GenerateCashRegisterTestDataResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="generateCashRegisterTestDataBinding" type="tns:GenerateCashRegisterTestData">
+		<wsp:PolicyReference URI="#Mtom.xml"/>
+		<soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="generateCashRegisterTestData">
+			<soap12:operation soapAction=""/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="generateCashRegisterTestData">
+		<wsdl:port name="GenerateCashRegisterTestData" binding="tns:generateCashRegisterTestDataBinding"/>
+	</wsdl:service>
+</wsdl:definitions>

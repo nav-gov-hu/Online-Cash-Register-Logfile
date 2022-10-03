@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# Projekt: Magyar Online Pénztárgép Rendszer opfApi XML XSD séma
+# A séma kiegészítő olyan kiegészítő elemeket tartalmaz, amelyeket az OPF rendszer a társrendszerekkel való kommunikációban használ
+# Author: NAV Informatikai Intézet
+
+# Version: v1.0 2019/11/10
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+           xmlns="http://schemas.nav.gov.hu/OPF/1.0/api" targetNamespace="http://schemas.nav.gov.hu/OPF/1.0/api"
+           xmlns:base="http://schemas.nav.gov.hu/OPF/1.0/base" elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+    <xs:include schemaLocation="cashRegisterApi.xsd"></xs:include>
+    <xs:import namespace="http://schemas.nav.gov.hu/OPF/1.0/base" schemaLocation="cashRegisterBase.xsd"/>
+    <xs:element name="GenerateCashRegisterTestDataRequest">
+        <xs:annotation>
+            <xs:documentation xml:lang="hu">A tesztállomány generálás operáció kérése</xs:documentation>
+            <xs:documentation xml:lang="en">Request element of the cash register test data generation operation</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="GenerateCashRegisterTestDataRequestType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GenerateCashRegisterTestDataResponse">
+        <xs:annotation>
+            <xs:documentation xml:lang="hu">A tesztállomány generálás operáció válasza</xs:documentation>
+            <xs:documentation xml:lang="en">Response element of the cash register test data generation operation</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="GenerateCashRegisterTestDataResponseType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="GenerateCashRegisterTestDataRequestType">
+        <xs:annotation>
+            <xs:documentation xml:lang="hu">A tesztállomány generálás operáció kérés típusa</xs:documentation>
+            <xs:documentation xml:lang="en">Request type of the cash register test data generation operation</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="BasicCashRegisterRequestType">
+                <xs:sequence>
+                    <xs:element name="generateCashRegisterTestDataParameter"
+                                type="GenerateCashRegisterTestDataParameterType">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="hu">A tesztállomány generálás paramétere</xs:documentation>
+                            <xs:documentation xml:lang="en">Parameters of the cash register test data generation</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="GenerateCashRegisterTestDataResponseType">
+        <xs:annotation>
+            <xs:documentation xml:lang="hu">A tesztállomány generálás operáció válasz típusa</xs:documentation>
+            <xs:documentation xml:lang="en">Response type of the cash register test data generation operation</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="BasicCashRegisterResponseType"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="GenerateCashRegisterTestDataParameterType">
+        <xs:annotation>
+            <xs:documentation xml:lang="hu">A tesztállomány generálás operáció paramétere</xs:documentation>
+            <xs:documentation xml:lang="en">Cash register test data generation parameter</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="APNumber" type="base:APNumberType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="hu">Pénztárgép AP száma, amelyre a tesztállomány generálás vonatkozik</xs:documentation>
+                    <xs:documentation xml:lang="en">The test data is generated for this cash register AP number</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
