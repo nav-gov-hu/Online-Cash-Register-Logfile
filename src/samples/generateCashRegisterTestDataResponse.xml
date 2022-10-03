@@ -1,0 +1,27 @@
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+	<env:Header/>
+	<env:Body>
+		<ns3:GenerateCashRegisterTestDataResponse xmlns:ns2="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:ns3="http://schemas.nav.gov.hu/OPF/1.0/api">
+			<ns2:header>
+				<ns2:requestId>5176453524</ns2:requestId>
+				<ns2:timestamp>2022-02-06T13:49:17Z</ns2:timestamp>
+				<ns2:requestVersion>1.0</ns2:requestVersion>
+				<ns2:headerVersion>1.0</ns2:headerVersion>
+			</ns2:header>
+			<ns2:result>
+				<ns2:funcCode>OK</ns2:funcCode>
+				<ns2:message>A kért A12345678 -ra a teszt állományok elkészültek</ns2:message>
+			</ns2:result>
+			<ns3:software>
+				<ns3:softwareId>123456789123456789</ns3:softwareId>
+				<ns3:softwareName>string</ns3:softwareName>
+				<ns3:softwareOperation>LOCAL_SOFTWARE</ns3:softwareOperation>
+				<ns3:softwareMainVersion>string</ns3:softwareMainVersion>
+				<ns3:softwareDevName>string</ns3:softwareDevName>
+				<ns3:softwareDevContact>string</ns3:softwareDevContact>
+				<ns3:softwareDevCountryCode>HU</ns3:softwareDevCountryCode>
+				<ns3:softwareDevTaxNumber>string</ns3:softwareDevTaxNumber>
+			</ns3:software>
+		</ns3:GenerateCashRegisterTestDataResponse>
+	</env:Body>
+</env:Envelope>

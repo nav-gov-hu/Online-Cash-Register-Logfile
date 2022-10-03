@@ -1,0 +1,36 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:api="http://schemas.nav.gov.hu/OPF/1.0/api"
+	xmlns:com="http://schemas.nav.gov.hu/NTCA/1.0/common">
+   <soap:Header/>
+   <soap:Body>
+      <api:QueryCashRegisterStatusRequest>
+         <com:header>
+            <com:requestId>5176453519</com:requestId>
+            <com:timestamp>2022-02-01T11:40:44.037Z</com:timestamp>
+            <com:requestVersion>1.0</com:requestVersion>
+            <com:headerVersion>1.0</com:headerVersion>
+         </com:header>
+         <com:user>
+            <com:login>lwilsmn0wdfgz6u</com:login>
+            <com:passwordHash cryptoType="SHA-512">2F43840A882CFDB7DB0FEC07D419D030D864B47B6B541DC280EF81B937B7A176E33C052B0D26638CC18A7A2C08D8D311733078A774BF43F6CA57FE8CD74DC28E</com:passwordHash>
+            <com:taxNumber>12345678</com:taxNumber>
+            <com:requestSignature cryptoType="SHA3-512">EB3C90F09FF8F84342B299191E637C49A8296F6068922FC8617F8C925623B44D2C3ECCC825E766E895C7781907DD61750EFE023D3D9B81F8684C4858536C30B1</com:requestSignature>
+            <!--<signKey>ac-ac3a-7f661bff7d342N43CYX4U9FG</signKey>-->
+         </com:user>
+         <api:software>
+            <api:softwareId>123456789123456789</api:softwareId>
+            <api:softwareName>string</api:softwareName>
+            <api:softwareOperation>LOCAL_SOFTWARE</api:softwareOperation>
+            <api:softwareMainVersion>string</api:softwareMainVersion>
+            <api:softwareDevName>string</api:softwareDevName>
+            <api:softwareDevContact>string</api:softwareDevContact>
+            <api:softwareDevCountryCode>HU</api:softwareDevCountryCode>
+            <api:softwareDevTaxNumber>string</api:softwareDevTaxNumber>
+         </api:software>
+         <api:cashRegisterStatusQuery>
+            <api:APNumberList>
+               <api:APNumber>A12345678</api:APNumber>
+            </api:APNumberList>
+         </api:cashRegisterStatusQuery>
+      </api:QueryCashRegisterStatusRequest>
+   </soap:Body>
+</soap:Envelope>
