@@ -1,0 +1,3065 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# Projekt: Magyar Online Pénztárgép Rendszer AEE napló állomány XML XSD séma
+# Project: Hungarian Online Cash Register FCU log file XML XSD schema
+# Törvény: 48/2013. (XI. 15.) NGM rendelet
+#           a pénztárgépek műszaki követelményeiről, a nyugtakibocsátásra szolgáló 
+#            pénztárgépek forgalmazásáról, használatáról és szervizeléséről,
+#            valamint a pénztárgéppel rögzített adatok adóhatóság felé történő
+#            szolgáltatásáról
+# Author: NAV Informatikai Intézet
+
+# Version: $Id: v6.6.5 2021/01/20 <a>Séma verzió: v6.6.5</a>
+
+Változások az előző verzióhoz képest:
+========================================================================================
+	- A FEN egyéb fizető eszköz mező kibővítésre került az AFR értékkel
+
+# Version: $Id: v6.6.4 2017/05/18 <a>Séma verzió: v6.6.4</a>
+
+Változások az előző verzióhoz képest:
+========================================================================================
+    - Az EDA szekvenciában előforduló ENM/EVL pár maximum 100 előfordulás megemelésre került 500-ra
+    - A GPS_TIP típus mintája az alábbiakban változik, mivel a GPS koordináták formátumának megadása nem volt egyértelmű
+        A kompatibilitás megőrzése miatt a korábbi 6.6.3-as XSD verzióban szereplő formátum is megengedett.
+            Új minta: [0-9]{0,2},[0-9]{4,16}|([0-8][0-9]),([0-5][0-9]),([0-5][0-9])\.([0-9][0-9])
+            Az új formátumban a tizedes szám tizedes jel előtti értéke max 2 szám lehet.
+            A tizedes jegy minimum 5  maximum 16 tizedes jegyig tölthető vagy üres.
+            Amennyiben nincs meghatározható érték akkor üres legyen ne pedig nulla.
+            A GSA,GSB tag esetén nillable="true" opció beállítása
+            Amennyiben üres az érték az alábbi módon kell megadni az XML-ben
+            <GSA xsi:nil="true"/>
+            <GSB xsi:nil="true"/>
+
+    - A PJN INE tag kötelezősége változott minoccurs = 0-ra
+    - A VBN/VBT bejegyzés VBS elemének mintájában egy plusz szóköz szerepelt, ezért a helyes VBS elem tartalom
+      esetén is XSD hiba jelentkezett, ez javítva lett.
+
+
+# Version: $Id: v6.6.3 2016/07/13 <a>Séma verzió: v6.6.3</a>
+
+Változások az előző verzióhoz képest:
+========================================================================================
+    - Valamennyi patternből eltávolításra került a ^ és $ jel mert hibás validálást okoztak
+    - A fizetési eszköz típus mintája az alábbira változott:
+      pattern="ERZSU|SZÉCHK|AJÁND|HŰSÉG|SMART|GÖNGY|KUPON|EGYEB-[a-zA-Z0-9aáeéiíoóöőuúüűAÁEÉIÍOÓÖŐUÚÜŰ]*"
+      így most már ékezetes magyar karakterek is felvihetőek az EGYEB-... kategóriába
+    - A tizedes típusok maxlength értékét növeltük az előjel a tizedesvessző valamint a tizedesjegyek számával 
+    - IVN tip SUM eleme lehet negatív is
+    - CRA_tip mintája az alábbira változott, így 8 tizedes jegyet is meg lehet adni:
+      pattern="(0|((((0|[1-9]\d*),\d{1,8})|([1-9]\d*))))"
+    - num8t4n_tip pattern változott az alábbiara:
+      pattern="-?(0|((((0|[1-9]\d{1,7}),\d{1,4}|\d{1,8},\d{1,4})|([1-9]\d{1,7})|(-?[0-9]))))"
+      
+# Version: $Id: v6.6.2 2016/07/05 <a>Séma verzió: v6.6.2</a>
+
+Változások az előző verzióhoz képest:
+========================================================================================
+    - Tetel és Tetel_v komplex típusokban a TY elem esetében az üres elem elfogadásához a pattern
+      az alábbiak szerint került kiegészítésre: <xsd:pattern value="s|e|es|k|ks|f|fs|g|gs|\s{0}"/>
+
+
+# Version: $Id: v6.6.1 2016/06/15 <a>Séma verzió: v6.6.1</a>
+
+Változások az előző verzióhoz képest:
+========================================================================================
+    - P20 komplex típus beállítása az ESN és EST elemen.
+
+
+# Version: $Id: v6.6 2016/06/06 <a>Séma verzió: v6.6</a>
+
+Változások az előző verzióhoz képest:
+========================================================================================
+    - egyeb_fizetoeszkoz/FES TAG típusa  num20nt_tip-re változott mivel lehet negatív is
+    - P20 komplex típus létrehozása egyszerűsített számla részére. VED elem kitöltése kötelező
+    - EVD mező max hossza 2048-ra változott 400-ról
+    
+# Version: $Id: v6.5 2016/05/31 <a>Séma verzió: v6.5</a>
+
+Változások az előző verzióhoz képest:
+========================================================================================
+    - Egyéb Fizetőeszköz regexp kifejezés változás az alábbira: 
+      <xsd:pattern value="ERZSU|SZÉCHK|AJÁND|HŰSÉG|SMART|GÖNGY|KUPON|EGYEB-[a-zA-Z0-9]*$"/>
+      Változás a korábbiakhoz képest az EGYÉB-[A-Z][0-9] fizetőeszköz esetén -> EGYEB-[a-zA-Z0-9]*$ 
+      Így bármilyen alfanumerikus értéket fel lehet venni.
+    - 1027. sorban hiányzó string javítása
+    - BSR_TIP-ben lévő felesleges elemek eltávolítása: 
+        <xsd:simpleType>
+        <xsd:restriction base="xsd:string"/>
+        </xsd:simpleType>
+    - A lenti patternek esetén a vessző escapelés el lett távolítva "\,"
+          <xsd:pattern value="^(0|((((0|[1-9]\d*)\,\d{1,6})|([1-9]\d*))))$">
+          <xsd:pattern value="^-?(0|((((0|[1-9]\d{1,7})\,\d{1,4})|([1-9]\d{1,7})|(-?[0-9]))))$"/>
+          <xsd:pattern value="^(0|((((0|[1-9]\d{1,7})\,\d{1,3})|([1-9]\d{1,7})|([0-9]))))$"/>
+          <xsd:pattern value="^-?(0|((((0|[1-9]\d{1,7})\,\d{1,3})|([1-9]\d{1,7})|(-?[0-9]))))$"/>
+          <xsd:pattern value="^(0|((((0|[1-9]\d{1,7})\,\d{1,4})|([1-9]\d{1,7})|([0-9]))))$"/>
+      
+# Author: Rencenji Dénes
+# Version: $Id: v6.4 2016/04/09 <a>Séma verzió: v6.4</a>
+
+Változások az előző verzióhoz képest:
+========================================================================================	
+    - Bejegyzés típusok a rendeletnek megfelelően sorba lettek állítva a könnyebb 
+      áttekinthetőség miatt
+    - Kommentek felülvizsgálata, javítása
+      WDN elem felvétele az FSN_tipusba
+    - Az EDN (gyakorló üzemmódban EDT) bejegyzés EDA elemének előfordulása max. 100-ra állítva 
+    - EVT bejegyzés <EVD> tag mérete 400 karakterre lett állítva 1000-ről
+    - EVT bejegyzés <EVC> tag elemei kiegészítve WDO,WDC elemekkel
+    - Új típus felvétele:UHKOD_TIP (string típus, pattern value="[0-9]{16}"
+    - INF bejegyzés <VCC> tag elem típusa UHKOD_TIP
+    - STA bejegyzésben az SCC tag mintája törölve mivel nincs megadva a struktúra
+      (pattern="(R[0-9]{2}.+)(~R[0-9]{2}.+)*") 
+    - Új típus felvétele:GPS_tip (string típus, 
+      pattern value="(([0-8][0-9]),([0-5][0-9]),([0-5][0-9]).([0-9][0-9]))
+      Példa az új típushoz: 47,36,59.99 (Fok, Perc, Másodperc)
+    - POS bejegyzés GSA, GSB tag részére GPS_tip típus beállítása
+    - A CON bejegyzésben a CPY tag a rendelethez igazodó sorrendbe tettem,
+      korábban a NAV tag alatt volt
+    - A num8t4n_tipus mintája az alábbira változott: 
+      pattern="^-?(0|((((0|[1-9]\d{0,7})\,\d{1,4})|(-?[1-9]\d{1,7}))))$"
+      A fenti változások az alábbi tag-eket érinti: UN,QY
+    - Új típus felvétele:CRA_tip (string típus, 
+      pattern value="^(0|((((0|[1-9]\d*)\,\d{1,6})|([1-9]\d*))))$" maxlength:20
+    - CRA tag-ok hoz a CRA_tip hozzárendelése
+    - NFN bejegyzésben a SGY lista előfordulása végtelenről 500-ra javítva
+    - SZN (gyakorló módban: SZT) bejegyzésben az RSN elemhez az alábbi minta
+    felvéve: pattern value="01|02|03|04|05|06|07|08|31|32|33|34|35|36|37|38|39|40|41|60"
+    -  VBN bejegyzés (gyakorló üzemmódban: VBT) RSN tag-ban a minta kis "v" betűről
+    nagy "V" betűre állítva
+    -  num8t4n_tip negatív is lehet
+    - num8t3_tip pattern value="^(0|((((0|[1-9]\d{0,7})\,\d{1,3})|([1-9]\d{1,7})|([0-9]))))$"/>
+     változott
+    - Új tétel típusok felvétele:
+        - Tetel_v ahol a TY értéke: pattern value="s|e|es|k|ks|f|fs|v|vs|g|gs" és üres tag is megengedett
+        Hozzárendelve az IVN_tip típushoz (IVT,IVN bejegyzés tipus)
+        - Tetel_v2 ahol a TY értéke: pattern value="v|vs|g|gs|f|fs|e|es" és és üres tag is megengedett
+    - Hozzárendelve a P18 típushoz (VBN,VBT bejegyzés típus)
+    - num10nt_tipus felvéve pattern value="(-?[0-9]+)|(-?[0-9]+,[0-9][0-9])|0"
+    - INF bejegyzés DFW elemének mintája pattern="V([0-9]\d{3})"-ra változott
+    - P10 típusban a SUM elem kötelező lett
+    - P10 típusban az NYL elem nem kötelező lett
+    - P11 típusban a GYJ elem GYF-re a GYF elem GYJ-re változott
+    - P11_tipusban az NSG elem pontosan egy elem ezért min és max occurs = 1
+    - Tetel_v típusnál a TY elem lehet üres ez esetben a jelentése "értékesítés"
+    - Valamennyi Tetel típusnál a TY elem kötelező
+    - Valamennyi Tetel típusnál a LANG=HU attribútum megszüntetve
+    - Valuta_adatok típusban a CAM elemből a minta törölve mivel azt az új num10nt_tip 
+      típus jelöli megfelelő mintaillesztéssel
+    - Valuta_gyujto típusban az FE2 és FEE elemek lehetnek negatívak is
+    - Rek_fej típusban a BSR elemhez hozzárendelve a BSR_tip tipus
+    - APszam_tip tipus nem lehet 0
+    - P10 típus IID elem regex mintájából hiányzott egy "/" jel
+    - P18 típus VBS elem regex mintájában a második groupban a hibásan jelölt "S" 
+      helyére "V" került
+    
+========================================================================================	
+# Author: Fercsik Gabor
+# Version: $Id: v6.3 2015/05/12 <a>Séma verzió: v6.3</a>
+Változások az előző verzióhoz képest:
+========================================================================================	
+	- Tetel típus "klónozva" lett  Tetel_xs-á ahol a TY értéke csak x és xs értéket vehet fel míg az eredeti tpusból ez kikerült
+========================================================================================	
+# Version: $Id: v6.2 2015/02/02 <a>Séma verzió: v6.2</a>
+Változások az előző verzióhoz képest:
+========================================================================================	
+	- TKJ mező hossz 20->50
+	- helyesírási hibák javítása
+	- hiányzó CPY,SUM mezők felvétele
+	- GGY napi göngyöleg visszaváltás beszúrása
+========================================================================================	
+# Version: $Id: v6. 2015/01/16 <a>Séma verzió: v6.1</a>
+Változások az előző verzióhoz képest:
+========================================================================================
+ - Új komplex bejegyzés tipusok: 
+    - IVN_tip
+    - PMN_tip
+    - INF_tip
+    - CON_tip
+    - FSN_tip
+ - Módosítások:
+    - új mező: LON_tip/LFN (Naplófile sorszáma)
+    - EVT_tip/EVC új értékekekt vehet fel: EUR|STB|STF|SCB|SCF|YCH|PRN|CRI|CRO és kikerült a  CHO érték
+    - Új mező: INF-tip/AKN,TSZ,NAM,IRS,TEL,KZT,KZJ,HSZ,VAT,GSM,TNA,COM,XMV
+    - INF-tip/THH mező szov200_tip tipusú lett
+    - Új mező: OPR_tip/NET,PRV
+    - Új mező: P19/CPY,NAV
+    - uj típusok: szov100_tip,num8t4_tip,num8t4n_tip,BSR_tip,szemely_tip,valuta_gyujto_tip
+    - ill kikerült jópár tipus a litsából
+========================================================================================
+Séma verziója: v6.0
+
+Változások az előző verzióhoz képest:
+
+ - A QY mező megenged negatív értéket is
+ - A JBN mező megenged negatív értéket is
+ - PIA és POA mezők opcionálisak lettek
+ - VTS és STO mezők opcionálisak lettek
+ - EVD mező maximális hosszának megnövelése 400-ról 1000-re
+ - Dátum típus megenged 0000-00-00T00:00:00+00:00 értéket
+ - PRD mező megenged negatív értéket is
+ - NSH mező megenged negatív értéket is
+ - JBV, JBB és JBE mezők megengednek negatív értéket is
+ - PNU mező maximális hossza 50 lett
+ - IID, SBS, VBS mezők típusa maximum 50 karakter hosszú szöveges lett
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OPGN/2.0" targetNamespace="http://schemas.nav.gov.hu/OPGN/2.0" elementFormDefault="qualified">
+	<xsd:element name="ROWS">
+		<xsd:complexType>
+			<xsd:choice maxOccurs="unbounded">
+				<xsd:element name="LON" type="LON_tip" minOccurs="1" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Naplóállomány nyitása esetén a bejegyzés azonosító: LON
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="EVT" type="EVT_tip" minOccurs="1" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              További eseményekre vonatkozó bejegyzések
+              Bejegyzés azonosító: EVT
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="INF" type="INF_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénztárgép működési információi bejegyzés azonosítója: INF
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="STA" type="STA_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénztárgép rendszerállapota bejegyzés azonosító: STA
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="OPR" type="OPR_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénztárgép forgalmazási mérőszámai bejegyzés azonosító: OPR
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="POS" type="POS_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénztárgép földrajzi helye bejegyzés azonosító: POS
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="TUD" type="TUD_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Óraállítás bejegyzés azonosító: TUD
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="CON" type="CON_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénztárnyitás bizonylat Bejegyzés azonosító: CON (gyakorló
+              üzemmódban: COT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="COT" type="CON_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénztárnyitás bizonylat Bejegyzés azonosító: CON (gyakorló
+              üzemmódban: COT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="NYN" type="P10" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Nyugta, egyszerűsített számla
+              Nyugta kibocsátása esetén a bejegyzés azonosító: NYN (gyakorló
+              üzemmód esetén NYT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="NYT" type="P10" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Nyugta, egyszerűsített számla
+              Nyugta kibocsátása esetén a bejegyzés azonosító: NYN (gyakorló
+              üzemmód esetén NYT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ESN" type="P20" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Nyugta, egyszerűsített számla Egyszerűsített számla kibocsátása
+              esetén a bejegyzés azonosító: ESN (gyakorló üzemmód esetén EST)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="EST" type="P20" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Nyugta, egyszerűsített számla Egyszerűsített számla kibocsátása
+              esetén a bejegyzés azonosító: ESN (gyakorló üzemmód esetén EST)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="NFN" type="P11" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Napi forgalmi jelentés bejegyzés azonosító: NFN (gyakorló
+              üzemmódban: NFT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="NFT" type="P11" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Napi forgalmi jelentés bejegyzés azonosító: NFN (gyakorló
+              üzemmódban: NFT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="PJN" type="P12" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénztárjelentés bejegyzés azonosító: PJN (gyakorló üzemmódban: PJT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="PJT" type="P12" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénztárjelentés bejegyzés azonosító: PJN (gyakorló üzemmódban: PJT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="PMN" type="PMN_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénzmozgás bizonylat bejegyzés azonosító: PMN (gyakorló
+              üzemmódban: PMT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="PMT" type="PMN_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Pénzmozgás bizonylat bejegyzés azonosító: PMN (gyakorló
+              üzemmódban: PMT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="IVN" type="IVN_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Egyes speciális értékesítések bizonylata, illetve ennek sztornó és
+              visszáru bizonylata Bejegyzés azonosító: IVN (gyakorló üzemmódban:
+              IVT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="IVT" type="IVN_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Egyes speciális értékesítések bizonylata, illetve ennek sztornó és
+              visszáru bizonylata Bejegyzés azonosító: IVN (gyakorló üzemmódban:
+              IVT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="SZN" type="P17" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Sztornó bizonylat bejegyzés azonosító: SZN (gyakorló módban: SZT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="SZT" type="P17" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Sztornó bizonylat bejegyzés azonosító: SZN (gyakorló módban: SZT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="VBN" type="P18" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Visszáru bizonylat (göngyölegjegy bizonylat) bejegyzés azonosító:
+              VBN (gyakorló üzemmódban: VBT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="VBT" type="P18" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Visszáru bizonylat (göngyölegjegy bizonylat) bejegyzés azonosító:
+              VBN (gyakorló üzemmódban: VBT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="FSN" type="FSN_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Fogyasztási összesítő bizonylat bejegyzés azonosító: FSN (gyakorló
+              üzemmódban: FST)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="FST" type="FSN_tip" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Fogyasztási összesítő bizonylat bejegyzés azonosító: FSN (gyakorló
+              üzemmódban: FST)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="EDN" type="P19" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Egyéb dokumentum nyomtatása bejegyzés azonosító: EDN (gyakorló
+              üzemmódban EDT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="EDT" type="P19" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+              Egyéb dokumentum nyomtatása bejegyzés azonosító: EDN (gyakorló
+              üzemmódban EDT)
+            </xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:attribute name="semaver" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="LON_tip">
+		<xsd:annotation>
+			<xsd:documentation>A pénztárgépben működő AEE a naplóállományok
+                         megnyitását – minden esetben a naplóállományok első
+                         bejegyzéseként – az alábbi bejegyzésekkel naplózza</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="RSR" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>Bejegyzés sorszám (bejegyzés sorszáma) naplófájlon
+                             belül (1-től sorszámozva)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DTS" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>Időbélyeg-szabványos dátum és idő adat másodperc
+                             pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="APN" type="APszam_tip">
+				<xsd:annotation>
+					<xsd:documentation>Pénztárgép AP száma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TSZ" type="TSZ_tip">
+				<xsd:annotation>
+					<xsd:documentation>Üzemeltető törzsszáma Üzemeltető törzsszáma
+                             (kétvállalkozós pénztárgép esetén az üzemanyag
+                             tulajdonos törzsszáma)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="LFN" type="num8e_tip">
+				<xsd:annotation>
+					<xsd:documentation>Naplófile sorszáma 1-től</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="THT" type="TSZ_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Kétvállalkozós pénztárgép esetén a társüzemeltető
+                             törzsszáma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="HSH" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ellenőrző kód</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="EVT_tip">
+		<xsd:annotation>
+			<xsd:documentation>pénztárgépben bekövetkezett események naplózására</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="RSR" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>Rekordsorszám (bejegyzés sorszáma) naplófájlon
+                             belül (1-től sorszámozva)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DTS" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>Időbélyeg</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="EVC">
+				<xsd:annotation>
+					<xsd:documentation>Esemény kódja</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="LCL|CRI|CRO|POF|PIN|BDN|RST|BLS|BLF|TRI|TRF|MGO|MGI|EUR|STB|STF|SCB|SCF|YCH|WDO|WDC|PRN"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="EVD" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Esemény leíró adata</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="2048"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="HSH" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ellenőrző kód</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="INF_tip">
+		<xsd:annotation>
+			<xsd:documentation>pénztárgép mûszaki jellemzõirõl</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="RSR" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>Bejegyzés sorszám naplófájlon belül (1-től
+                             sorszámozva)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DTS" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>Időbélyeg</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DTY" type="szov200_tip">
+				<xsd:annotation>
+					<xsd:documentation>AEE gyártói típusnév</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DRV" type="szov200_tip">
+				<xsd:annotation>
+					<xsd:documentation>AEE hardver verzió</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DFW">
+				<xsd:annotation>
+					<xsd:documentation>AEE szoftver verzió</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="5"/>
+						<xsd:pattern value="V([0-9]\d{3})"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DFH" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>AEE egységben futó szoftver SHA256 algoritmussal
+                             kiszámított ellenőrző kódja</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DFT" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>Az AEE egységben futó szoftver legutóbbi
+                             frissítésének időpontja.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DMT">
+				<xsd:annotation>
+					<xsd:documentation>Az AEE-ben lévő modem kiolvasott típus
+                             megnevezése</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="32"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DMF" type="szov200_tip">
+				<xsd:annotation>
+					<xsd:documentation>Az AEE-ben lévő modem kiolvasott szoftververziója</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DME" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Az AEE-ben lévő modem kiolvasott IMEI száma.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DMS" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Az AEE-ben lévő SIM kiolvasott IMSI száma.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AKN" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Akkumulátor gyári száma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TSZ" type="TSZ_tip">
+				<xsd:annotation>
+					<xsd:documentation>Üzemeltető adó törzsszáma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="NAM" type="szov100_tip">
+				<xsd:annotation>
+					<xsd:documentation>Üzemeltető neve</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IRS">
+				<xsd:annotation>
+					<xsd:documentation>Üzemeltető székhely irányítószám</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TEL" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Üzemeltető székhely település</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="KZT" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Üzemeltető székhely közterület neve</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="KZJ" type="szov20_tip">
+				<xsd:annotation>
+					<xsd:documentation>Üzemeltető székhely közterület jellege</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="HSZ" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Üzemeltető székhely házszám</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="VAT" type="szov200_tip">
+				<xsd:annotation>
+					<xsd:documentation>Aktuális ÁFA-tábla (a vonatkozó NAV üzenet)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="GSM" type="szov20_tip">
+				<xsd:annotation>
+					<xsd:documentation>A legutóbb használt cella egyedi azonosítója</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TNA" type="szov100_tip">
+				<xsd:annotation>
+					<xsd:documentation>Pénztárgép telephely (üzlet) elnevezése</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TZC">
+				<xsd:annotation>
+					<xsd:documentation>Ptg. Telephely irányítószám</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TCY" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ptg. Telephely település</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TKN" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ptg. Telephely közterület neve</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TKJ" type="szov20_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ptg. Telephely közterület jellege</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="THH" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ptg. Telephely házszám</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DPH" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>A pénztárgép hardver gyártói típusmegjelölése</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DPV" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>A pénztárgép hardververziója</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DPF" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>A pénztárgépben futó szoftver verziója</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DPS" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>A pénztárgépben futó szoftver SHA256 algoritmussal
+                             kiszámított ellenőrző kódja, AEE-vel felszerelt
+                             adóügyi nyomtató esetén üres</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="VCC">
+				<xsd:annotation>
+					<xsd:documentation>Legutóbb használt üzembe helyezési kód</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="UHKOD_tip"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MIS">
+				<xsd:annotation>
+					<xsd:documentation>A pénztárgépen a legutóbbi beavatkozást végző
+                             műszerész igazolványának
+                             száma</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="12"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="APN" type="APszam_tip">
+				<xsd:annotation>
+					<xsd:documentation>Pénztárgép AP száma</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="COM">
+				<xsd:annotation>
+					<xsd:documentation>A pénztárgép által használt kommunikációs protokoll
+                             verziószáma</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="(C[0-9]{4})"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="XMV">
+				<xsd:annotation>
+					<xsd:documentation>A legfrissebb séma verziószáma, aminek a pénztárgép
+                             által képzett naplóállományok megfelelnek.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="(X[0-9]{4})"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="HSH" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ellenőrző kód</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="STA_tip">
+		<xsd:annotation>
+			<xsd:documentation>pénztárgép rendszerállapot statisztika</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="RSR" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>Bejegyzés sorszám (bejegyzés sorszáma) naplófájlon
+                             belül (1-től sorszámozva)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DTS" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>Időbélyeg</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SST">
+				<xsd:annotation>
+					<xsd:documentation>Pénztárgép állapot: „0”, ha a pénztárgép működik és
+                             nincs blokkolva „1”, ha a pénztárgép blokkolt
+                             állapotban van „2”, ha a pénztárgép hibás</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="0|1|2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SFL" type="numNNI10">
+				<xsd:annotation>
+					<xsd:documentation>Az AEE-ben működő adattárolón lévő szabad
+                             tároló kapacitás (Kbyte)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SSG">
+				<xsd:annotation>
+					<xsd:documentation>Az AEE-ben működő modem által mért hálózati térerőt
+                             (-1)dBm - (-199)dBm-ig terjedő skálán negatív egész
+                             számmal ábrázolva.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="numNI3"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SAC">
+				<xsd:annotation>
+					<xsd:documentation>Akkumulátor töltöttség egész számmal, vezető nullák
+                             nélkül (%)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="numNNI3"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SMT" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>GSM hálózatból kiolvasott pontos idő</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SCC" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Pénztárgépben az utolsó STA rekord küldése óta
+                             jelentkezett hibák belső kódjainak listája.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="400"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="HSH" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ellenőrző kód</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="OPR_tip">
+		<xsd:annotation>
+			<xsd:documentation>Apénztárgép mûszaki mérõszámai</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="RSR" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>Bejegyzés sorszám (bejegyzés sorszáma) naplófájlon belül (1-től sorszámozva)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DTS" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>Időbélyeg</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ODS" type="numNNI12">
+				<xsd:annotation>
+					<xsd:documentation>A legutóbbi bekapcsolás óta a modem által küldött
+                             bájtok száma, beleértve a megszakadt kapcsolatok
+                             adatait is.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ODR" type="numNNI12">
+				<xsd:annotation>
+					<xsd:documentation>A legutóbbi bekapcsolás óta a modem által fogadott
+                             bájtok számát, beleértve a megszakadt kapcsolatok
+                             adatait is.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ODF" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>A legutóbbi bekapcsolás óta a mobil adatkapcsolat
+                             kiépítésére tett sikertelen kísérletek száma.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="OSF" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>A legutóbbi bekapcsolás óta az SSL adatcsatorna
+                             felépítésére tett sikertelen kísérletek száma.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="NET">
+				<xsd:annotation>
+					<xsd:documentation>A legutóbbi bejelentkezés során használt átviteli
+                             technológia: 
+                             0 – GSM
+                             1 – 2G technológia
+                             2 – 2,5G technológia
+                             3 – 3G technológia
+                             4 – 4G technológia</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="0|1|2|3|4"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PRV">
+				<xsd:annotation>
+					<xsd:documentation>A legutóbbi bejelentkezés során használt
+                            infrastruktúrát biztosító fizikai
+                            mobilszolgáltató:
+                            0 – Magyar Telekom
+                            1 – Telenor
+                            2 – Vodafone
+                            3 – Egyéb
+                            </xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="0|1|2|3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="OCC">
+				<xsd:annotation>
+					<xsd:documentation>AEE egység belső mérőszámai,ahol "N" a belső
+                             mérőszám azonosítóját, "E" a mért paraméter értékét
+                             jelenti.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence maxOccurs="99">
+						<xsd:element name="NCC" type="szov20_tip"/>
+						<xsd:element name="ECC" type="szov50_tip"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="HSH" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ellenőrző kód</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="POS_tip">
+		<xsd:annotation>
+			<xsd:documentation>Pénztárgép földrajzi helye</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="RSR" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>Bejegyzés sorszám (bejegyzés sorszáma) naplófájlon belül (1-től sorszámozva)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DTS" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>Időbélyeg</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="GSA" type="GPS_tip" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Pénztárgép földrajzi szélessége fokban, legfeljebb
+                             5 tizedesjegy pontossággal, előjelet használva, a
+                             WGS84 szabvány szerint</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="GSB" type="GPS_tip" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Pénztárgép földrajzi hosszúsága fokban, legfeljebb
+                             5 tizedesjegy pontossággal, előjelet használva, a
+                             WGS84 szabvány szerint</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="GSH">
+				<xsd:annotation>
+					<xsd:documentation>Pénztárgép tengerszint feletti magassága méterben,
+                             a WGS84 szabvány szerint</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="5"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="HSH" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>Ellenőrző kód</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TUD_tip">
+		<xsd:annotation>
+			<xsd:documentation>Idő állításkor</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="RSR" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>Bejegyzés sorszám</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="OLD" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Azaz idő, amikor az átállítás régi idő
+            szerint bekövetkezik.
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="NEW" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Beállított új idő
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CHT" type="numNNI10">
+				<xsd:annotation>
+					<xsd:documentation>
+            Ha a rendszer nem diszkréten változtatja
+            az időt, hanem egy időtávon gyorsítja
+            vagy lassítja az időt, akkor az átmenet
+            ideje másodpercben
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CAS">
+				<xsd:annotation>
+					<xsd:documentation>
+            Az időállítás módja:
+            1-GSM szinkronizáció,
+            2-Szervizes beavatkozás,
+            3-Üzemeltető által módosítva
+            4-Számítógép alapú pénztárgépeknél a
+            számítógép órájához szinkronizálva
+            5-Egyéb automatikus szinkronizáció
+          </xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="1|2|3|4|5"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="HSH" type="HSH_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Ellenőrző kód
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="CON_tip">
+		<xsd:annotation>
+			<xsd:documentation>Pénztárnyitás bizonylat</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="DNO" type="num20t_tip">
+						<xsd:annotation>
+							<xsd:documentation>A megnyitott adóügyi nap sorszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="DRC" type="valuta_gyujto_tip">
+						<xsd:annotation>
+							<xsd:documentation>A nyitó pénzkészlet adatai</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat példányszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylaton szereplő NAV ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>A nyomtatott bizonylaton szereplő további
+                                 adatok eltárolásához használható egyéb mező</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat megszakítása esetén a megszakítás
+                                 tényének jelzése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>Ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="PMN_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Pénzmozgás bizonylat bejegyzés
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="PMS">
+						<xsd:annotation>
+							<xsd:documentation>
+                Pénzmozgás bizonylat sorszáma M/nnnn/sssss alakban, ahol nnnn az
+                adóügyi nap sorszáma, sssss a pénzmozgás bizonylatok napi
+                számlálója
+              </xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="M/[0-9]{4}/[0-9]{5}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="RSN">
+						<xsd:annotation>
+							<xsd:documentation>
+                a pénztári befizetés, kifizetés vagy fizetőeszköz csere jogcímei
+              </xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="01|02|03|04|05|06|07|08|31|32|33|34|35|36|37|38|39|40|41|60"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="DRC" type="valuta_gyujto_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                a fióktartalom változásának adatai
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PBA" type="numNNI20" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                a bizonylathoz kapcsolódó visszajáró összege egész forintban
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PRD" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                kerekítési különbözet összege forintban (pozitív, ha a vevő
+                szempontjából számolt előjellel
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                A bizonylaton szereplő NAV ellenőrző kód
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>
+                A nyomtatott bizonylaton szereplő további adatok eltárolásához
+                használható egyedi mező
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                A bizonylat példányszáma
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Bizonylat megszakítása esetén a megszakítás tényének jelzése
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Ellenőrző kód
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="IVN_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Számlakibocsátással kísért értékesítés bizonylata, illetve ennek sztornó
+        és visszáru bizonylata
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="ORN">
+						<xsd:annotation>
+							<xsd:documentation>
+                Bizonylatszám X/aaaa/bbbbb alakban, ahol: X: a bizonylat
+                típusának jelölése, egészségkártyás bizonylat esetén „EK”,
+                üzemanyagkártyás bizonylat esetén „UK” aaaa: az adóügyi nap
+                sorszáma bbbbb: a bizonylat sorszáma
+              </xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="(U|E)K/[0-9]{4}/[0-9]{5}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="EPN" type="szov50_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                az egészségpénztár neve, amennyiben értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="EPA" type="szov200_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                az egészségpénztár címe, amennyiben értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="EPC" type="szov50_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                az egészségpénztár kódja, amennyiben értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ERN" type="szov50_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                a vevő tagszáma (egészségpénztári azonosítószáma) , amennyiben
+                értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ECN" type="szov20_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                az egészségkártya száma , amennyiben értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="VED" type="szemely_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                A vevő adatai
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="FCN" type="szov20_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                üzemanyagkártya száma (legalább négy számjegy), amennyiben
+                értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CID" type="szov20_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                engedélyezési azonosítószám, amennyiben értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="FRN" type="szov20_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                a rendszám, kizárólag betűket és számokat feltüntetve,
+                amennyiben értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ITL" type="Tetel_v" minOccurs="0" maxOccurs="1000">
+						<xsd:annotation>
+							<xsd:documentation>
+                A bizonylat tételei.A bizonylat összes tételére vonatkozóan,
+                tételenként.
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SUM" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                Bizonylat összesen forintban, amennyiben értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SUV" type="Valuta_adatok" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+                Bizonylat összesen valutában, amennyiben értelmezhető
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                A bizonylaton szereplő NAV ellenőrző kód
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>
+                A nyomtatott bizonylaton szereplő további adatok eltárolásához
+                használható egyéb mező
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                A bizonylat példányszáma
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Bizonylat megszakítása esetén a megszakítás tényének jelzése
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Ellenőrző kód
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="FSN_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Fogyasztási összesítő bizonylat
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="NSZ">
+						<xsd:annotation>
+							<xsd:documentation>
+                a bizonylat száma F/bbbb/ccccc formátumban, ahol bbbb: adóügyi
+                nap sorszáma ccccc: adott napon kibocsátott bizonylat sorszáma
+              </xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="F/[0-9]{4}/[0-9]{5}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="ITL" type="Tetel_xs" minOccurs="0" maxOccurs="1000">
+						<xsd:annotation>
+							<xsd:documentation>
+               A bizonylat tételei.A bizonylat összes tételére vonatkozóan,
+                tételenként.
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SUM" type="num20nt_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Bizonylat összesen forintban
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>
+                A nyomtatott bizonylaton szereplő további adatok eltárolásához
+                használható egyedi mező
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                A bizonylat példányszáma
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                A bizonylaton szereplő NAV ellenőrző kód
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="WDN" type="szov10_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Fogyasztásösszesítő egyedi azonosítója
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Bizonylat megszakítása esetén a megszakítás tényének jelzése
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CTS" type="Datum_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Időbélyeg, a bizonylat zárásának pontos ideje az AEE órája
+                szerint
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>
+                Ellenőrző kód
+              </xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="P10">
+		<xsd:annotation>
+			<xsd:documentation>Nyugta</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="NSZ">
+						<xsd:annotation>
+							<xsd:documentation>a bizonylat száma bbbb/ccccc formátumban, ahol
+                                 bbbb: adóügyi nap sorszáma ccccc: adott napon
+                                 kibocsátott bizonylat sorszáma</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="[0-9]{4}/[0-9]{5}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="IID" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>az egyszerűsített számla egyedi azonosítója</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="([A-Z|0][0-9]{8}/[0-9]{4}/[0-9]{5})|([A|B]/[A-Z|0][0-9]{8}/[0-9]{4}/[0-9]{5})"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="ITL" type="Tetel" minOccurs="0" maxOccurs="1000">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat tételei.A bizonylat összes tételére vonatkozóan,
+                tételenként.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="DRC" type="valuta_gyujto_tip">
+						<xsd:annotation>
+							<xsd:documentation>a fióktartalom változásának adatai</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="RND" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a bizonylaton szereplő kerekítés összege, egész
+                                 forintban számolva, szükség esetén negatív
+                                 előjellel, ha van ilyen adat</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="TRA" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (átvitel)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="RCV" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (áthozat)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PNU" type="szov50_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (iker bizonylat száma)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="VED" type="szemely_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Egyszerűsített számla esetén a termék
+                                 beszerzőjének, szolgáltatás igénybevevőjének
+                                 adatai az ÁFA tv. rendelkezései szerint</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SUM" type="num20t_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat összesen forintban, amennyiben
+                                 értelmezhető</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NYL" type="szov20_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Adószám</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylaton szereplő NAV ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>A nyomtatott bizonylaton szereplő további
+                                 adatok eltárolásához használható egyéb mező</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat példányszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat megszakítása esetén a megszakítás
+                                 tényének jelzése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CTS" type="Datum_tip">
+						<xsd:annotation>
+							<xsd:documentation>Időbélyeg, a bizonylat zárásának pontos ideje
+                                 az AEE órája szerint</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>Ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--6.3 Napi forgalmi jelentés (NFN) 11.o-->
+	<xsd:complexType name="P11">
+		<xsd:annotation>
+			<xsd:documentation>Napi forgalmi jelentés</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="ZSZ">
+						<xsd:annotation>
+							<xsd:documentation>a zárás sorszáma négy karakteren, szükség
+                                 esetén vezető nullákkal feltöltve</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:length value="4"/>
+								<xsd:pattern value="0*[0-9]{4}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="GYF" type="GyujtoF">
+						<xsd:annotation>
+							<xsd:documentation>Napi forgalom forgalmi gyűjtők szerinti
+                                 összesítése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSF" type="num20t_tip">
+						<xsd:annotation>
+							<xsd:documentation>a napi forgalom összesen, bruttó összegben,
+                                 egész forintban számolva</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSH" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a napi felár összesen, bruttó összegben, egész
+                                 forintban számolva</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSS" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a napi sztornó összesen, bruttó összegben,
+                                 egész forintban számolva</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSY" type="num20t_tip">
+						<xsd:annotation>
+							<xsd:documentation>a napi engedmény összesen, bruttó összegben,
+                                 egész forintban számolva</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSV" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a napi visszáru összesen, bruttó összegben,
+                                 egész forintban számolva</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NDB" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a napi nyugták és egyszerűsített számlák száma
+                                 összesen</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NNS" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>napi nyugták száma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NES" type="numNNI10" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>napi egyszerűsített számlák száma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NPB" type="numNNI10" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>napi pénzmozgás bizonylatok száma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NIR" type="numNNI10" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>napi megszakítások száma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NST" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a napi sztornó bizonylatok száma összesen</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="STS" type="numNNI10" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>napi sztornó bizonylatok összértéke összesen,
+                                 egész forintban, pozitív számként</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SGY" type="GyujtoF" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Napi sztornó bizonylatok forgalmi gyűjtőnként</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSW" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a napi visszáru bizonylatok száma összesen</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="VSS" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>napi visszáru bizonylatok értéke összesen,
+                                 egész forintban, pozitív számként</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="VGY" type="GyujtoF" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Napi visszáru bizonylatok értéke forgalmi
+                                 gyűjtőnként</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="GGY" type="GyujtoF" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Napi göngyöleg visszaváltás értéke forgalmi
+                                 gyűjtőnként (ideértve a göngyölegjegyeket is)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSG" type="num50t_tip" maxOccurs="1">
+						<xsd:annotation>
+							<xsd:documentation>a göngyölített forgalom</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylaton szereplő NAV ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>A nyomtatott bizonylaton szereplő további
+                                 adatok eltárolásához használható egyedi mező</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat példányszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat megszakítása esetén a megszakítás
+                                 tényének jelzése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>Ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--6.4 Pénztárjelentés 13.o-->
+	<xsd:complexType name="P12">
+		<xsd:annotation>
+			<xsd:documentation>Pénztárjelentés</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="CRO" type="valuta_gyujto_tip">
+						<xsd:annotation>
+							<xsd:documentation>Nyitó pénzkészlet adatai</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SEL" type="valuta_gyujto_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Értékesítéshez, sztornó- és visszáruhoz
+                                 kapcsolódó be- és kifizetések egyenlege
+                                 fizetőeszközönként</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CIO" type="valuta_gyujto_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Nem értékesítéshez kötődő pénztári ki- és
+                                 befizetések napi egyenlege fizetőeszközönként</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CUS" type="valuta_gyujto_tip">
+						<xsd:annotation>
+							<xsd:documentation>Aktuális fióktartalom fizetőeszközönként</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="IRN" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Napi nyugtamegszakítások száma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="IRV" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Napi megszakított nyugták összértéke (a
+                                 megszakítás előtti állapotok szerint)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSD" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Napi tételsztornó száma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NSE" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Napi tételsztornó összértéke</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="TIP" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Napi felszolgálói díj összege</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="INE" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Számlával kísért értékesítés napi összege</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="INS" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Számlával kísért értékesítés napi sztornó
+                                 összege</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="INV" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Számlával kísért értékesítés napi visszáru
+                                 összege</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylaton szereplő NAV ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>A nyomtatott bizonylaton szereplő további
+                                 adatok eltárolásához használható egyedi mező</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat példányszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat megszakítása esetén a megszakítás
+                                 tényének jelzése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>Ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--6.5 Pénzmozgás bizonylat 15.o-->
+	<!--6.6 Számlakibocsátással kísért értékesítés bizonylata, illetve ennek sztornó és visszáru bizonylata 17.o-->
+	<!--6.7 Sztornó bizonylat (SZN) 19.o-->
+	<xsd:complexType name="P17">
+		<xsd:annotation>
+			<xsd:documentation>Sztornó bizonylat</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="SBS">
+						<xsd:annotation>
+							<xsd:documentation>A sztornó bizonylat száma S/bbbb/ccccc alakban
+                                 (kétvállalkozós pénztárgépeken S/X/bbbb/ccccc
+                                 alakban), ahol: X: Az üzemeltető jele (A vagy
+                                 B) bbbb: adónap sorszáma ccccc: bizonylat
+                                 sorszáma</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="S/[0-9]{4}/[0-9]{5}|S/(A|B)/[0-9]{4}/[0-9]{5}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="SBN" type="szov50_tip">
+						<xsd:annotation>
+							<xsd:documentation>sztornózott nyugta, egyszerűsített számla vagy
+                                 visszáru bizonylat egyedi azonosítója</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="RSN">
+						<xsd:annotation>
+							<xsd:documentation>a sztornózás oka: S1 – ügyfél elállása S2 –
+                                 kezelői hiba: téves bevitel S3 – kezelői hiba:
+                                 téves fizetőeszköz bevitel S4 – kezelői hiba:
+                                 termék nincs készleten S5 – technikai: téves
+                                 bizonylattípus kibocsátása S6 – technikai:
+                                 sikertelen fizetőeszköz használat S7 –
+                                 technikai: téves ügyfél adat/hibás bevitel S8 –
+                                 technikai: próbavásárlás S0 – egyéb</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="S1|S2|S3|S4|S5|S6|S7|S8|S0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="VED" type="szemely_tip" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>A vevő adatai</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ITL" type="Tetel" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat tételei.A bizonylat összes tételére vonatkozóan,
+                tételenként.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SUM" type="num20nt_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat összesen forintban</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PCR" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a sztornó bizonylathoz kapcsolódó kerekítési
+                                 különbözet összege forintban</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="TRA" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (átvitel)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="RCV" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (áthozat)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PNU" type="szov50_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (iker bizonylat száma)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="DRC" type="valuta_gyujto_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a fióktartalom változásának adatai</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylaton szereplő NAV ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>A nyomtatott bizonylaton szereplő további
+                                 adatok eltárolásához használható egyedi mező</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat példányszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat megszakítása esetén a megszakítás
+                                 tényének jelzése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>Ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--6.8 Visszáru bizonylat 21.o-->
+	<xsd:complexType name="P18">
+		<xsd:annotation>
+			<xsd:documentation>Visszáru bizonylat (göngyölegjegy bizonylat)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="VBS">
+						<xsd:annotation>
+							<xsd:documentation>A visszáru bizonylat száma V/bbbb/ccccc
+                                 (kétvállalkozós pénztárgépen V/X/bbbb/ccccc)
+                                 alakban, ahol: X: Az üzemeltető jele (A vagy B)
+                                 bbbb: adónap sorszáma ccccc: bizonylat sorszáma</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="V/[0-9]{4}/[0-9]{5}|V/(A|B)/[0-9]{4}/[0-9]{5}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="VDB" type="szov50_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a visszáruzott nyugta vagy egyszerűsített
+                                 számla sorszáma, a göngyölegjegy esetén "GJ"</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="RSN">
+						<xsd:annotation>
+							<xsd:documentation>a visszáruzás oka: V1 – hibás áru V2 – ügyfél
+                                 elállása a vásárlástól V3 – egyéb</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="V1|V2|V3"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="VED" type="szemely_tip" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>A vevő adatai (göngyölegjegy esetén nem
+                                 szerepel)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ITL" type="Tetel_v2" minOccurs="0" maxOccurs="1000">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat tételei.A bizonylat összes tételére vonatkozóan,
+                tételenként.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SUM" type="num20nt_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat összesen forintban</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PCR" type="num20nt_tip">
+						<xsd:annotation>
+							<xsd:documentation>a visszáru bizonylathoz kapcsolódó kerekítési
+                                 különbözet összege forintbann</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="TRA" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (átvitel)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="RCV" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (áthozat)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PNU" type="szov50_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (iker bizonylat száma)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="DRC" type="valuta_gyujto_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a fióktartalom változásának adatai</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylaton szereplő NAV ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>A nyomtatott bizonylaton szereplő további
+                                 adatok eltárolásához használható egyedi mező</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat példányszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat megszakítása esetén a megszakítás
+                                 tényének jelzése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>Ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!--Fogyasztási összesítő bizonylat 24.o-->
+	<!--Egyéb dokumentum nyomtatása 25.o-->
+	<xsd:complexType name="P19">
+		<xsd:annotation>
+			<xsd:documentation>Egyéb dokumentum nyomtatása</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="EIT" type="szov20_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Egyéb dokumentum típusa"</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="EIL" type="szov20_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Egyéb dokumentum típus leírás"</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="EDA" minOccurs="1">
+						<xsd:annotation>
+							<xsd:documentation>Egyéb dokumentumon szereplő adatok</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence minOccurs="0" maxOccurs="500">
+								<xsd:element name="ENM" type="szov20_tip">
+									<xsd:annotation>
+										<xsd:documentation>Egyéb dokumentumon szereplő adat megnevezése</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="EVL" type="szov200_tip">
+									<xsd:annotation>
+										<xsd:documentation>Egyéb dokumentumon szereplő adat értéke</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat példányszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylaton szereplő NAV ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat megszakítása esetén a megszakítás
+                                 tényének jelzése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>Ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="P20">
+		<xsd:annotation>
+			<xsd:documentation>Egyszerűsített számla</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="RekFej">
+				<xsd:sequence>
+					<xsd:element name="NSZ">
+						<xsd:annotation>
+							<xsd:documentation>a bizonylat száma bbbb/ccccc formátumban, ahol
+                                 bbbb: adóügyi nap sorszáma ccccc: adott napon
+                                 kibocsátott bizonylat sorszáma</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="[0-9]{4}/[0-9]{5}"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="IID" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>az egyszerűsített számla egyedi azonosítója</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="([A-Z|0][0-9]{8}/[0-9]{4}/[0-9]{5})|([A|B]/[A-Z|0][0-9]{8}/[0-9]{4}/[0-9]{5})"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="ITL" type="Tetel" minOccurs="0" maxOccurs="1000">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat tételei.A bizonylat összes tételére vonatkozóan,
+                tételenként.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="DRC" type="valuta_gyujto_tip">
+						<xsd:annotation>
+							<xsd:documentation>a fióktartalom változásának adatai</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="RND" type="num20nt_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>a bizonylaton szereplő kerekítés összege, egész
+                                 forintban számolva, szükség esetén negatív
+                                 előjellel, ha van ilyen adat</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="TRA" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (átvitel)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="RCV" type="num20t_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (áthozat)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="PNU" type="szov50_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Kétvállalkozós pénztárgépeknél használt mező
+                                 (iker bizonylat száma)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="VED" type="szemely_tip" minOccurs="1">
+						<xsd:annotation>
+							<xsd:documentation>Egyszerűsített számla esetén a termék
+                                 beszerzőjének, szolgáltatás igénybevevőjének
+                                 adatai az ÁFA tv. rendelkezései szerint</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="SUM" type="num20t_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat összesen forintban, amennyiben
+                                 értelmezhető</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NYL" type="szov20_tip" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Adószám</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="NAV" type="szov5_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylaton szereplő NAV ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="ZQQ" type="szov200_tip" minOccurs="0" maxOccurs="199">
+						<xsd:annotation>
+							<xsd:documentation>A nyomtatott bizonylaton szereplő további
+                                 adatok eltárolásához használható egyéb mező</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CPY" type="num5e_tip">
+						<xsd:annotation>
+							<xsd:documentation>A bizonylat példányszáma</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CNC" type="CNC_tip">
+						<xsd:annotation>
+							<xsd:documentation>Bizonylat megszakítása esetén a megszakítás
+                                 tényének jelzése</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="CTS" type="Datum_tip">
+						<xsd:annotation>
+							<xsd:documentation>Időbélyeg, a bizonylat zárásának pontos ideje
+                                 az AEE órája szerint</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="HSH" type="HSH_tip">
+						<xsd:annotation>
+							<xsd:documentation>Ellenőrző kód</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="Tetel">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="NA" type="szov200_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tétel bizonylaton szereplő megnevezése</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PN" type="szov50_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>a tételhez tartozó cikkszám</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="UN" type="num8t4n_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tétel bizonylaton szereplő egységára forintban,
+                             tizedesvesszővel elválasztva, négy tizedes
+                             pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="QY" type="num8t4n_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő mennyiség,
+                             maximum 4 tizedesjegy pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IU" type="szov10_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő mennyiségi egység</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TY" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Az adott tétel jellege</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="s|e|es|k|ks|f|fs|g|gs|\s{0}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SU" type="num20nt_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő összérték
+                             forintban</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="VC">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton feltüntetett forgalmi
+                             gyűjtő jele három karakteren</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3"/>
+						<xsd:pattern value="[A-E][0-9]{2}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="RM" type="szov50_tip" minOccurs="0" maxOccurs="40">
+				<xsd:annotation>
+					<xsd:documentation>a tételsorra vonatkozó, legfeljebb 40-szer
+                             ismételhető megjegyzés mező</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Tetel_v">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="NA" type="szov200_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tétel bizonylaton szereplő megnevezése</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PN" type="szov50_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>a tételhez tartozó cikkszám</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="UN" type="num8t4n_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tétel bizonylaton szereplő egységára forintban,
+                             tizedesvesszővel elválasztva, négy tizedes
+                             pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="QY" type="num8t4n_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő mennyiség,
+                             maximum 4 tizedesjegy pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IU" type="szov10_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő mennyiségi egység</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TY" nillable="true">
+				<xsd:annotation>
+					<xsd:documentation>Az adott tétel jellege:</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="s|e|es|k|ks|f|fs|v|vs|g|gs|\s{0}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SU" type="num20nt_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő összérték
+                             forintban</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="VC">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton feltüntetett forgalmi
+                             gyűjtő jele három karakteren</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3"/>
+						<xsd:pattern value="[A-E][0-9]{2}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="RM" type="szov50_tip" minOccurs="0" maxOccurs="40">
+				<xsd:annotation>
+					<xsd:documentation>a tételsorra vonatkozó, legfeljebb 40-szer
+                             ismételhető megjegyzés mező</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Tetel_v2">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="NA" type="szov200_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tétel bizonylaton szereplő megnevezése</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PN" type="szov50_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>a tételhez tartozó cikkszám</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="UN" type="num8t4n_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tétel bizonylaton szereplő egységára forintban,
+                             tizedesvesszővel elválasztva, négy tizedes
+                             pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="QY" type="num8t4n_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő mennyiség,
+                             maximum 4 tizedesjegy pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IU" type="szov10_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő mennyiségi egység</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TY" nillable="false">
+				<xsd:annotation>
+					<xsd:documentation>Az adott tétel jellege</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="v|vs|g|gs|f|fs|e|es"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SU" type="num20nt_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő összérték
+                             forintban</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="VC">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton feltüntetett forgalmi
+                             gyűjtő jele három karakteren</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3"/>
+						<xsd:pattern value="[A-E][0-9]{2}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="RM" type="szov50_tip" minOccurs="0" maxOccurs="40">
+				<xsd:annotation>
+					<xsd:documentation>a tételsorra vonatkozó, legfeljebb 40-szer
+                             ismételhető megjegyzés mező</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Tetel_xs">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="NA" type="szov200_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tétel bizonylaton szereplő megnevezése</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PN" type="szov50_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>a tételhez tartozó cikkszám</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="UN" type="num8t4n_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tétel bizonylaton szereplő egységára forintban,
+                             tizedesvesszővel elválasztva, négy tizedes
+                             pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="QY" type="num8t4n_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő mennyiség,
+                             maximum 4 tizedesjegy pontossággal</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IU" type="szov10_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő mennyiségi egység</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TY" nillable="false">
+				<xsd:annotation>
+					<xsd:documentation>Az adott tétel jellege</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="x|xs"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SU" type="num20nt_tip">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton szereplő összérték
+                             forintban</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="VC">
+				<xsd:annotation>
+					<xsd:documentation>a tételnél a bizonylaton feltüntetett forgalmi
+                             gyűjtő jele három karakteren</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3"/>
+						<xsd:pattern value="[A-E][0-9]{2}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="RM" type="szov50_tip" minOccurs="0" maxOccurs="40">
+				<xsd:annotation>
+					<xsd:documentation>a tételsorra vonatkozó, legfeljebb 40-szer
+                             ismételhető megjegyzés mező</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GyujtoF">
+		<xsd:sequence maxOccurs="500">
+			<xsd:element name="GYJ">
+				<xsd:annotation>
+					<xsd:documentation>Forgalmi gyűjtő azonosító</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3"/>
+						<xsd:pattern value="[A-E][0-9]{2}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="GYE" type="num20nt_tip">
+				<xsd:annotation>
+					<xsd:documentation>Gyűjtő értéke</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="egyeb_fizeszk">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="FEN">
+				<xsd:annotation>
+					<xsd:documentation>Fizetőeszköz neve</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="szov20_tip">
+						<xsd:pattern value="ERZSU|SZÉCHK|AJÁND|HŰSÉG|SMART|GÖNGY|KUPON|AFR|EGYEB-[a-zA-Z0-9aáeéiíoóöőuúüűAÁEÉIÍOÓÖŐUÚÜŰ]*"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="FES" type="num20nt_tip">
+				<xsd:annotation>
+					<xsd:documentation>Egyenleg a fizetőeszköz tekintetében, forintban</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Valuta_adatok">
+		<xsd:sequence maxOccurs="10">
+			<xsd:element name="CAM">
+				<xsd:annotation>
+					<xsd:documentation>valuta összege (valutában)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="num10nt_tip"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CTY">
+				<xsd:annotation>
+					<xsd:documentation>valutanem 3 karakteren, nagybetűvel az MNB jelölése
+                             szerint</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3"/>
+						<xsd:pattern value="[A-Z]{3}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CRA" type="CRA_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>valuta egy egységének forintban kifejezett, adózó
+                             által alkalmazott értéke</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CFT" type="num20nt_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>valuta összegének értéke egész forintban, a
+                             feltüntetett árfolyamon számolva</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="valuta_gyujto_tip">
+		<xsd:sequence>
+			<xsd:element name="FE1" type="num20nt_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+            forint készpénz forintban
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="FEV" type="Valuta_adatok" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+            a valutában befizetett összeg adatai
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="FE2" type="num20nt_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+            bankkártyás bevételek egész forintban
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="FEE" type="num20nt_tip" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+            egyszerűsített számlákon feltüntetett egészségpénztári bevételek
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="FE3" type="egyeb_fizeszk" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+            nyitó készlet egyéb fizetőeszköz tekintetében
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="szemely_tip">
+		<xsd:sequence>
+			<xsd:element name="NAM" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Beszerző vagy igénybevevő neve
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IRS">
+				<xsd:annotation>
+					<xsd:documentation>
+            Irányítószám
+          </xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TEL" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Település
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="KZT" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Közterület neve
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="KZJ" type="szov20_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Közterület jellege
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="HSZ" type="szov50_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Házszám
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ASZ" type="szov20_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Adószám
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="RekFej" mixed="false">
+		<xsd:sequence maxOccurs="1">
+			<xsd:element name="RSR" type="num5e_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Bejegyzés sorszám (bejegyzés sorszáma) naplófájlon belül (1-től sorszámozva)
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="BSR" type="BSR_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Bizonylat számláló, aminek kezdeti értéke „1” és minden bizonylat
+            AEE-ben való eltárolását követően 1-gyel nő, a kiadott bizonylat
+            típusától függetlenül.
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DTS" type="Datum_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            Időbélyeg, a bizonylat nyitásának kiadásának pontos ideje az AEE
+            órája szerint
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TSZ" type="TSZ_tip">
+				<xsd:annotation>
+					<xsd:documentation>
+            A bizonylatot kiállító adóalany adó törzsszáma
+          </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="UHKOD_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Üzembehelyezési kód típus
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{16}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="GPS_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        WGS84 szerinti GPS koordináták
+        Fok, perc, másodperc formátumban 
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{0,2},[0-9]{4,16}|([0-8][0-9]),([0-5][0-9]),([0-5][0-9])\.([0-9][0-9])"/>
+			<!-- <xsd:pattern value="([0-8][0-9]),([0-5][0-9]),([0-5][0-9]).([0-9][0-9])"></xsd:pattern> -->
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CRA_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        A valuta egy egységének forintban kifejezett,
+        adózó által alkalmazott értéke (árfolyama)
+        legfeljebb hat értékes jegy pontossággal
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="20"/>
+			<xsd:pattern value="(0|((((0|[1-9]\d*),\d{1,6})|([1-9]\d*))))"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ESZEA_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Nincs használva
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z|0][0-9]{8}/[0-9]{4}/[0-9]{5}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="APszam_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        AP szám típus
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z][0-9]{8}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TSZ_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Adószám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{8}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="szov10_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        10 hoszzú szöveg
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="szov20_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        20 hoszzú szöveg
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="szov50_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        50 hoszzú szöveg
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="szov5_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        5 hoszzú szöveg
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="5"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="szov100_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        100 hoszzú szöveg
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="100"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="szov200_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        200 hoszzú szöveg
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="200"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="numNNI3">
+		<xsd:annotation>
+			<xsd:documentation>
+        3 hosszú nem negatív egész szám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger">
+			<xsd:maxInclusive value="999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="numNI3">
+		<xsd:annotation>
+			<xsd:documentation>
+        3 hosszú negatív egész szám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:negativeInteger">
+			<xsd:minInclusive value="-199"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="numNNI10">
+		<xsd:annotation>
+			<xsd:documentation>
+        10 hosszú nem negatív egész szám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger">
+			<xsd:maxInclusive value="9999999999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="numNNI12">
+		<xsd:annotation>
+			<xsd:documentation>
+        12 hosszú nem negatív egész szám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger">
+			<xsd:maxInclusive value="999999999999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="numNNI20">
+		<xsd:annotation>
+			<xsd:documentation>
+        20 hosszú nem negatív egész szám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger">
+			<xsd:maxInclusive value="99999999999999999999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num5e_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 5 karakteres szám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<xsd:maxInclusive value="99999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num8e_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 8 hosszú egész szám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<xsd:maxInclusive value="99999999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num20e_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 20 hosszú nem negatív egész szám
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<xsd:maxInclusive value="99999999999999999999"/>
+			<xsd:minInclusive value="-9999999999999999999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num20nt_tip">
+		<xsd:annotation>
+			<xsd:documentation>Max. 20 hosszú törtszám amely lehet negatív is. Legfeljebb két
+                         tizedes
+                         pontossággal.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="22"/>
+			<xsd:pattern value="(-?[0-9]+)|(-?[0-9]+,[0-9][0-9])|0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num10t_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 10 hosszú tizedes szám, két tizedesig
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="10"/>
+			<xsd:pattern value="([0-9]+)|([0-9]+,[0-9][0-9])|0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num10nt_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max 10 hosszú szám ami lehet negatív is.
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="12"/>
+			<xsd:pattern value="(-?[0-9]+)|(-?[0-9]+,[0-9][0-9])|0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num20t_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 20 hosszú tizedes szám, két tizedes pontossággal
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="20"/>
+			<xsd:pattern value="([0-9]+)|([0-9]+,[0-9][0-9])|0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num50t_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 50 hosszú szöveg 
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="50"/>
+			<xsd:pattern value="([0-9]+)|([0-9]+,[0-9][0-9])|0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num8t3_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 8 hosszú szám, legfegfeljebb 3 tizedes pontossággal 
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="12"/>
+			<xsd:pattern value="(0|((((0|[1-9]\d{1,7}),\d{1,3})|([1-9]\d{1,7})|([0-9]))))"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num8t4_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 8 hosszú szám, legfeljebb 4 tizedes pontossággal
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="13"/>
+			<xsd:pattern value="(0|((((0|[1-9]\d{0,7}),\d{1,4})|([1-9]\d{1,7})|([0-9]))))"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num8t3n_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 8 hosszú szám,  legfeljebb 3 tizedes pontossággal. Lehet negatív is
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="13"/>
+			<xsd:pattern value="-?(0|((((0|[1-9]\d{1,7}),\d{1,3})|([1-9]\d{1,7})|(-?[0-9]))))"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="num8t4n_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Max. 8 hosszú szám, legfeljebb 4 tizedes pontossággal. Lehet negatív is.
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="14"/>
+			<xsd:pattern value="-?(0|((((0|[1-9]\d{1,7}),\d{1,4}|\d{1,8},\d{1,4})|([1-9]\d{1,7})|(-?[0-9]))))"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CNC_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Bizonylat megszakítása esetén a megszakítás
+        tényének jelzése. Értéke 0 vagy 1
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="0|1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="HSH_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        64 HEXA karakter hash kód
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([0-9]|[A-F]){64}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Datum_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Szabványos dátum és
+        idő adat másodperc
+        pontossággal
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(0|2)[0-9]{3}-(((00|01|03|05|07|08|10|12)-([0-2][0-9]|3[0-1]))|((04|06|09|11)-([0-2][0-9]|30))|(02-[0-2][0-9]))T([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9][+]0[0-2]:00"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="BSR_tip">
+		<xsd:annotation>
+			<xsd:documentation>
+        Bizonylat számláló értéke
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="10"/>
+			<xsd:pattern value="([0-9])+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
