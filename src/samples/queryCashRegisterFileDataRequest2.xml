@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:api="http://schemas.nav.gov.hu/OPF/1.0/api" xmlns:com="http://schemas.nav.gov.hu/NTCA/1.0/common">
+   <soap:Header/>
+   <soap:Body>
+      <api:QueryCashRegisterFileDataRequest>
+         <com:header>
+            <com:requestId>10153701</com:requestId>
+            <com:timestamp>2022-10-13T08:15:44Z</com:timestamp>
+            <com:requestVersion>1.0</com:requestVersion>
+            <com:headerVersion>1.0</com:headerVersion>
+         </com:header>
+         <com:user>
+            <com:login>lwilsmn0u23456u</com:login>
+            <com:passwordHash cryptoType="SHA-512">2F43840A882CFDB7DB0FEC07D419D030D864B47B6B541DC280EF81B937B7A176E33C052B0D26638CC18A7A2C08D8D311733078A774BF43F6CA57FE8CD74DC28E</com:passwordHash>
+            <com:taxNumber>11111111</com:taxNumber>
+            <com:requestSignature cryptoType="SHA3-512">F4CD9F629F95E1C8BE8159E09D35865646B5D2909493482E2C79DE84D51F6CB59F44EB04A802749CD3365176ED4E27769039D64B4DB174526B2FAF8215A76A1D</com:requestSignature>
+            <!--<signKey>ac-ac3a-7f661bff7d342N43CYX4U9FG</signKey>-->
+         </com:user>
+         <api:software>
+            <api:softwareId>123456789123456789</api:softwareId>
+            <api:softwareName>string</api:softwareName>
+            <api:softwareOperation>LOCAL_SOFTWARE</api:softwareOperation>
+            <api:softwareMainVersion>string</api:softwareMainVersion>
+            <api:softwareDevName>string</api:softwareDevName>
+            <api:softwareDevContact>string</api:softwareDevContact>
+            <api:softwareDevCountryCode>HU</api:softwareDevCountryCode>
+            <api:softwareDevTaxNumber>string</api:softwareDevTaxNumber>
+         </api:software>
+         <api:cashRegisterFileDataQuery>
+            <api:APNumber>A12345678</api:APNumber>
+            <api:fileNumberStart>39</api:fileNumberStart>
+            <api:fileNumberEnd>39</api:fileNumberEnd>
+         </api:cashRegisterFileDataQuery>
+      </api:QueryCashRegisterFileDataRequest>
+   </soap:Body>
+</soap:Envelope>
