@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Pénztárgép Rendszer cashRegisterApi XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v1.0 2019/11/10
+# Version: v1.1 2021/12/13
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns="http://schemas.nav.gov.hu/OPF/1.0/base" targetNamespace="http://schemas.nav.gov.hu/OPF/1.0/base" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:simpleType name="APNumberType">
