@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://opg.nav.gov.hu/OnlinePenztargepRendszer/uzenet/OpfAllomany/AllomanyErkeztetes/v1_0/AllomanyWrap"
+           xmlns="http://opg.nav.gov.hu/OnlinePenztargepRendszer/uzenet/OpfAllomany/AllomanyErkeztetes/v1_0/AllomanyWrap"
+           elementFormDefault="qualified">
+    <xs:element name="wrap">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- documentMeta block -->
+                <xs:element name="documentMeta">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="documentMetaDetail" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="documentNumber" type="xs:string"/>
+                                        <xs:element name="recordCounter" type="xs:integer"/>
+                                        <xs:element name="documentPath" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <!-- missingRecordCounter block -->
+                <xs:element name="missingRecordCounter" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="missingRecordCounterEntry"
+                                        type="xs:integer"
+                                        minOccurs="0"
+                                        maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
